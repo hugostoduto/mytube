@@ -1,4 +1,4 @@
-import { createContext, ReactNode,useContext,useState} from 'react'
+import { createContext, ReactNode,useContext,useEffect,useState} from 'react'
 
 type SidebarProviderProps ={
   children: ReactNode
@@ -21,6 +21,15 @@ export function useSidebarcontext(){
 export function SidebarProvide({children}:SidebarProviderProps) {
   const [isLargeOpen, setIsLargeOpen] = useState(true)
   const [isSmallOpen, setIsSmallOpen] = useState(false)
+  useEffect(()=>{
+    const handle = () => {
+      if(!isScreenSmall()) setIsSmallOpen(false)
+    }
+    window.addEventListener('resize', handle)
+    return () => {
+      window.removeEventListener('resize', handle)
+    }
+  },[])
   function isScreenSmall(){
     return window.innerWidth < 1024
   }

@@ -7,12 +7,9 @@ import { useSidebarcontext } from '@/contexts/SidebarContext';
 
 export function PageHeader(){
   const [searchFull, setSearchFull] = useState(false)
-  const {toggle} = useSidebarcontext()
+  
   return <div className="flex gap-10 lg:gap-20 justify-between pt-2 mb-6 mx-4">
-    <div className={` gap-4 items-center flex-shirink-0 ${searchFull ? "hidden" : "flex"}`}>
-      <Button onClick={toggle} variant="ghost" size="icon"><Menu/></Button>
-      <Link  href='/'><p className="font-sans text-lg #020617">My Tube</p></Link>
-    </div>
+   <PageHeaderFristSection hidden={searchFull}/>
     <form className={`  gap-4 flex-grow flex-shirink-0 ${searchFull ? "flex" : "  hidden md:flex"}`}>
    {searchFull && (  <Button onClick={()=>setSearchFull(false)}  size="icon" variant="ghost">
         <ArrowLeft/>
@@ -43,4 +40,14 @@ export function PageHeader(){
       </Button>
     </div>
   </div>
+}
+type PageHeaderFristSectionProps = {
+  hidden?:boolean
+}
+export function PageHeaderFristSection({hidden = false}:PageHeaderFristSectionProps) {
+  const {toggle} = useSidebarcontext()
+  return <div className={` gap-4 items-center flex-shirink-0 ${hidden ? "hidden" : "flex"}`}>
+  <Button onClick={toggle} variant="ghost" size="icon" ><Menu/></Button>
+  <Link  href='/'><p className="font-sans text-lg #020617">My Tube</p></Link>
+</div>
 }
