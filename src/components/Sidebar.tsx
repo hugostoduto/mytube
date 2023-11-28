@@ -1,54 +1,75 @@
-import React, {  Children, ElementType,ReactNode,useState} from 'react'
-import { Home, Repeat, Clapperboard,Library, ChevronUp,ChevronDown,
-  History,
+import {
+  ChevronDown,
+  ChevronUp,
+  Clapperboard,
+  Clock,
+  Home,
+  Library,
   PlaySquare,
-  Clock, ListVideo } from 'lucide-react'
+  Repeat,
+  History,
+  ListVideo,
+  Flame,
+  ShoppingBag,
+  Music2,
+  Film,
+  Radio,
+  Gamepad2,
+  Newspaper,
+  Trophy,
+  Lightbulb,
+  Shirt,
+  Podcast,
+} from "lucide-react"
+import React, {  Children, ElementType,ReactNode,useState} from 'react'
 import Button, { buttonStyles } from './Button'
 import { twMerge } from 'tailwind-merge'
-import { playlists } from '@/data/sidebar'
+import { playlists, subscriptions } from '@/data/sidebar'
+import { useSidebarcontext } from '@/contexts/SidebarContext'
 
 
 const Sidebar = () => {
+  const {isLargeOpen, isSmallOpen} = useSidebarcontext()
   return (
     <>
     <aside className='sticky top-0 overflow-y-auto scrollbar-hidden pb-4 flex flex-col ml-1 lg:hidden'>
-      <SmallSidebarItem IconOrUrl={Home} title="Home" url='/'/>
-      <SmallSidebarItem IconOrUrl={Repeat} title="Shorts" url='/shorts'/>
-      <SmallSidebarItem IconOrUrl={Clapperboard} title="Subscriptions" url='/shorts'/>
-      <SmallSidebarItem IconOrUrl={Library} title="Library" url='/shorts'/>
+      <SmallSidebarItem IconOrImgUrl={Home} title="Home" url='/'/>
+      <SmallSidebarItem IconOrImgUrl={Repeat} title="Shorts" url='/shorts'/>
+      <SmallSidebarItem IconOrImgUrl={Clapperboard} title="Subscriptions" url='/shorts'/>
+      <SmallSidebarItem IconOrImgUrl={Library} title="Library" url='/shorts'/>
 
     </aside>
-    <aside className="w-56 lg:sticky absolute top-0 overflow-auto scrollbar-hidden pb-4 flex-col gap-2 px-2 flex ">
+    <aside className="w-56 lg:sticky absolute top-0 overflow-auto scrollbar-hidden pb-4 flex-col gap-2 px-2 lg:flex hidden ">
       <LargeSidebarSection title='' >
-        <LargeSidebarItems  isActive={true} IconOrUrl={Home} title="Home" url='/'/>
-        <LargeSidebarItems isActive IconOrUrl={Clapperboard} title="Subscription" url='/'/>
+        <LargeSidebarItems  isActive={true} IconOrImgUrl={Home} title="Home" url='/'/>
+        <LargeSidebarItems isActive IconOrImgUrl={Clapperboard} title="Subscription" url='/'/>
       </LargeSidebarSection>
       <hr/>
       <LargeSidebarSection visibleItemCount={5}>
           <LargeSidebarItems
-            IconOrUrl={Library}
+            IconOrImgUrl={Library}
             title="Library"
             url="/library"
           />
           <LargeSidebarItems
-            IconOrUrl={History}
+            IconOrImgUrl={History}
             title="History"
             url="/history"
           />
           <LargeSidebarItems
-            IconOrUrl={PlaySquare}
+            IconOrImgUrl={PlaySquare}
             title="Your Videos"
             url="/your-videos"
           />
           <LargeSidebarItems
-            IconOrUrl={Clock}
+            IconOrImgUrl={Clock}
             title="Watch Later"
             url="/playlist?list=WL"
           />
           {playlists.map(playlist => (
              <LargeSidebarItems
              key={playlist.id}
-             IconOrUrl={ListVideo}
+             IconOrImgUrl={ListVideo}
              title={playlist.name}
              url="/playlist?list=WL"
            />
@@ -56,8 +77,60 @@ const Sidebar = () => {
       </LargeSidebarSection>
       <hr/>
       <LargeSidebarSection title='Sbscription' >
-        <LargeSidebarItems isActive={true} IconOrUrl={Home} title="Home" url='/'/>
-        <LargeSidebarItems isActive IconOrUrl={Clapperboard} title="Subscription" url='/'/>
+        {subscriptions.map(subscription => (
+             <LargeSidebarItems
+             key={subscription.id}
+             IconOrImgUrl={subscription.imgUrl}
+             title={subscription.channelName}
+             url={`@/${subscription.id}`}
+           />
+        ))}
+      </LargeSidebarSection>
+      <hr/>
+      <LargeSidebarSection title='Explore' >
+      <LargeSidebarItems
+            IconOrImgUrl={Flame}
+            title="Trending"
+            url="/trending"
+          />
+          <LargeSidebarItems
+            IconOrImgUrl={ShoppingBag}
+            title="Shopping"
+            url="/shopping"
+          />
+          <LargeSidebarItems IconOrImgUrl={Music2} title="Music" url="/music" />
+          <LargeSidebarItems
+            IconOrImgUrl={Film}
+            title="Movies & TV"
+            url="/movies-tv"
+          />
+          <LargeSidebarItems IconOrImgUrl={Radio} title="Live" url="/live" />
+          <LargeSidebarItems
+            IconOrImgUrl={Gamepad2}
+            title="Gaming"
+            url="/gaming"
+          />
+          <LargeSidebarItems IconOrImgUrl={Newspaper} title="News" url="/news" />
+          <LargeSidebarItems
+            IconOrImgUrl={Trophy}
+            title="Sports"
+            url="/sports"
+          />
+          <LargeSidebarItems
+            IconOrImgUrl={Lightbulb}
+            title="Learning"
+            url="/learning"
+          />
+          <LargeSidebarItems
+            IconOrImgUrl={Shirt}
+            title="Fashion & Beauty"
+            url="/fashion-beauty"
+          />
+          <LargeSidebarItems
+            IconOrImgUrl={Podcast}
+            title="Podcasts"
+            url="/podcasts"
+          />
       </LargeSidebarSection>
     </aside>
     </>
@@ -67,16 +140,16 @@ const Sidebar = () => {
 export default Sidebar
 
 type SmallSidebarItemProps = {
-  IconOrUrl: ElementType | string,
+  IconOrImgUrl: ElementType | string,
   title: string,
   url: string
 }
 
 
-function SmallSidebarItem({IconOrUrl, title, url}:SmallSidebarItemProps) {
+function SmallSidebarItem({IconOrImgUrl, title, url}:SmallSidebarItemProps) {
   return(
     <a href={url} className={twMerge( buttonStyles({variant: 'ghost'}),"py-4 px-1 flex flex-col items-center rounded-lg gap-1")}>
-      <IconOrUrl className="w-6 h-6"/>
+      <IconOrImgUrl className="w-6 h-6"/>
       <div className="text-small">{title}</div>
     </a>
   )
@@ -95,7 +168,7 @@ function LargeSidebarSection({children,
     const chidlrenArray = Children.toArray(children).flat()
     const showExpandButton =chidlrenArray.length > visibleItemCount
     const visibleChildren = isExpend ? chidlrenArray : chidlrenArray.slice(0,visibleItemCount)
-    const ButtonIconOrUrl = isExpend ? ChevronUp : ChevronDown
+    const ButtonIconOrImgUrl = isExpend ? ChevronUp : ChevronDown
   return (
     <div>
       {title && (
@@ -106,7 +179,7 @@ function LargeSidebarSection({children,
         <Button
         onClick={()=> setIsExpend(e => !e)}
         variant="ghost" className='w-full flex items-center rounded-lg gap-4 p-3' >
-          <ButtonIconOrUrl className="w-6 h-6" />
+          <ButtonIconOrImgUrl className="w-6 h-6" />
           <div>{isExpend ? 'Show Less' : 'Show More'}</div>
         </Button>
       )}
@@ -114,16 +187,19 @@ function LargeSidebarSection({children,
   )
 }
 type LargeSidebarItemsProps = {
-  IconOrUrl: ElementType,
+  IconOrImgUrl: ElementType,
   title:string,
   url: string,
   isActive: boolean
 }
 
-function LargeSidebarItems({IconOrUrl, title, url, isActive= false}:LargeSidebarItemsProps) {
+function LargeSidebarItems({IconOrImgUrl, title, url, isActive= false}:LargeSidebarItemsProps) {
   return(
     <a href={url} className={twMerge( buttonStyles({variant: 'ghost'}),`w-full flex items-center rounded-lg gap-4 p-3${isActive ? "font-bold bg-natural-100 hover:bg-secondary" : undefined}`)}>
-      <IconOrUrl className="w-6 h-6"/>
+      {typeof IconOrImgUrl === 'string' ? <img className='h-6 w-6 rounded-full' alt={IconOrImgUrl}  src={IconOrImgUrl} /> : (
+
+      <IconOrImgUrl className="w-6 h-6"/>
+      )}
       <div className="whitespace-nowrap overflow-hidden text-ellipsis">{title}</div>
     </a>
   )

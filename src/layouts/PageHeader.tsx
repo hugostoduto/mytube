@@ -3,12 +3,14 @@ import { useState } from 'react';
 import Button from '@/components/Button';
 import {Menu,Upload,Bell, User, Mic,Search,ArrowLeft} from 'lucide-react'
 import Link from '../../node_modules/next/link';
+import { useSidebarcontext } from '@/contexts/SidebarContext';
 
 export function PageHeader(){
   const [searchFull, setSearchFull] = useState(false)
+  const {toggle} = useSidebarcontext()
   return <div className="flex gap-10 lg:gap-20 justify-between pt-2 mb-6 mx-4">
     <div className={` gap-4 items-center flex-shirink-0 ${searchFull ? "hidden" : "flex"}`}>
-      <Button variant="ghost" size="icon"><Menu/></Button>
+      <Button onClick={toggle} variant="ghost" size="icon"><Menu/></Button>
       <Link  href='/'><p className="font-sans text-lg #020617">My Tube</p></Link>
     </div>
     <form className={`  gap-4 flex-grow flex-shirink-0 ${searchFull ? "flex" : "  hidden md:flex"}`}>
